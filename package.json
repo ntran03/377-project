@@ -1,11 +1,19 @@
 {
-  "name": "377-project",
-  "version": "1.0.0",
-  "description": "Spotify Snapshot app",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Nicole Tran",
-  "license": "ISC"
+    "name": "spotify-authorization-code",
+    "version": "0.0.2",
+    "description": "Spotify Authorization Code",
+    "author": "Spotify",
+    "scripts": {
+        "start": "nodemon app.js"
+    },
+    "dependencies": {
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "crypto": "^1.0.1",
+        "express": "4.18.2",
+        "express-session": "^1.18.0",
+        "querystring": "^0.2.1",
+        "request": "^2.88.2",
+        "url": "^0.11.3"
+    }
 }

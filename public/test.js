@@ -21,7 +21,10 @@ function fetchProfile() {
   var params = getHashParams()
   if (params) {
     console.log(params)
-  } 
+    localStorage.setItem("access_token", params.access_token)
+    localStorage.setItem("refresh_token", params.refresh_token)
+  }
+  console.log(localStorage.getItem("access_token"))
   //var token = localStorage.getItem("access_token");
   //document.getElementById("tester").innerHTML = token
 }

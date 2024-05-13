@@ -147,6 +147,27 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+// Form and Submission Handling  
+const bodyParser = require('body-parser');
+let submissions = [];
+
+app.use(bodyParser.json());
+app.use(express.static('public'));
+
+app.post('/submit', (req, res) => {
+    console.log('Form Data:', req.body);
+    submissions.push(req.body);
+    res.json({ message: 'Submission received!' });
+});
+
+app.get('/submissions', (req, res) => {
+    res.json(submissions);
+});
+
+app.get('/view-submissions', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'main.html'));
+});
+
 
 console.log('Listening on 8888');
 app.listen(8888);

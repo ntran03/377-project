@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>About</title>
+        <link rel="stylesheet" href="general.css">
+        <script src="about.js"></script>
+    </head>
+    <body>
+        <h3>SPOTIFY SNAPSHOT- ABOUT</h3>
+        <nav id="main-nav">
+            <ul>
+                <li><a href="main.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="generate.html">Generate</a></li>
+                <li><a href="help.html">Help</a></li>
+            </ul>
+        </nav>
+
+        <h3> Hello, User!</h3>
+        <p>This is a website designed to allow you to create a spotify wrapped playlist whenever you want.
+        For you stat nerds out there, we provide insights on the # of times you've listened to each of your favorite songs and artists!</p>
+        
+
+        <p>We also aim to help users keep finding the music they love.
+        Our generator tool uses spotfiy's reccomendation system supercharged with songs you like and genres you prefer to develop a playist tailored for you, or just save the playlist with your current favorites! We won't judge :)</p>
+        
+
+
+        <h3>Have a question or suggestion? We'd love to hear it!</h3>
+
+        <form id="submissionForm">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name" required><br><br>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br><br>
+            <label for="comment">Comment:</label><br>
+            <textarea id="comment" name="comment" required></textarea><br><br>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="responseMessage"></div>
+
+    </body>
+</html>

@@ -24,5 +24,20 @@ function setCode() {
     console.log(code)
     document.getElementById("access_code").innerHTML = code
 }
-  
-window.onload = fetchToken()
+
+document.addEventListener('DOMContentLoaded', function() {
+  fetch('/submissions')
+  .then(response => response.json())
+  .then(data => {
+      const displayDiv = document.getElementById('submissions');
+      data.forEach(submission => {
+          displayDiv.innerHTML += `<p>Name: ${submission.name}<br>Email: ${submission.email}<br>Comment: ${submission.comment}</p>`;
+      });
+  })
+  .catch((error) => {
+      console.error('Error:', error);
+  });
+});
+
+window.onload = fetchToken() 
+

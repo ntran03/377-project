@@ -13,6 +13,7 @@ var crypto = require('crypto');
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 
 var client_id = '36dd62132c624fbeaaa2f99068f5ff60'; // your clientId
@@ -102,12 +103,11 @@ app.get('/callback', function(req, res) {
         request.get(options, function(error, response, body) {
           console.log(body);
         });
-
         // we can also pass the token to the browser to make requests from there
         res.redirect('main.html#' +
           querystring.stringify({
             access_token: access_token,
-            refresh_token: refresh_token
+            refresh_token: refresh_token,
           }));
       } else {
         res.redirect('/#' +
@@ -148,7 +148,6 @@ app.get('/refresh_token', function(req, res) {
 });
 
 // Form and Submission Handling  
-const bodyParser = require('body-parser');
 let submissions = [];
 
 app.use(bodyParser.json());
@@ -166,6 +165,58 @@ app.get('/submissions', (req, res) => {
 
 app.get('/view-submissions', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'main.html'));
+});
+
+// Profile Page
+let userProfile = {}; // Define userProfile in the global scope- not working
+
+let top5Lists = {  // Define top5Lists in the global scope
+  artists: [],
+  songs: [],
+  albums: []
+};
+
+async function getAccessToken() {
+  const fetch = await import('node-fetch'); // Use dynamic import
+  const response = await fetch.default('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
+    },
+    body: 'grant_type=client_credentials'
+  });
+  const data = await response.json();
+  return data.access_token;
+}
+
+
+app.get('/search', async (req, res) => {
+  const query = req.query.q;
+  const type = req.query.type;
+  const artist = req.query.artist || '';
+  const token = await getAccessToken();
+  const headers = { 'Authorization': 'Bearer ' + token };
+
+  let searchUrl = `https://api.spotify.com/v1/search?q=${query}&type=${type}&limit=5`;
+  if (type === 'track' && artist) {
+    searchUrl = `https://api.spotify.com/v1/search?q=track:${query}+artist:${artist}&type=track&limit=5`;
+  }
+
+  const searchResults = await fetch(searchUrl, { headers });
+  const data = await searchResults.json();
+
+  res.json(data);
+});
+
+app.get('/top5', (req, res) => {
+  res.json(top5Lists);
+});
+
+app.post('/top5', (req, res) => {
+  const { artists, songs, albums } = req.body;
+  top5Lists = { artists, songs, albums };
+  res.status(200).json({ message: 'Top 5 lists updated successfully' });
 });
 
 

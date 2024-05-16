@@ -1,20 +1,41 @@
 /* Nav Bar */
 body {
     background-color: rgb(214, 224, 244);
-  }
+}
 
 #main-nav {
     background-color: rgba(103, 96, 230, 0.487);
     position: relative;
+    height: 50px; 
+    display: flex;
+    align-items: center; 
+    padding: 0 20px; 
+    box-sizing: border-box;
+}
+
+#main-nav ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    display: flex;
+    align-items: center; 
+    width: 100%; 
 }
 
 #main-nav li {
     display: inline-block;
     position: relative;
+    height: 100%; 
+    margin: 0; 
+    padding: 0 10px; 
 }
 
 #main-nav li:hover {
-    background-color:rgba(39, 11, 198, 0.312)
+    background-color: rgba(39, 11, 198, 0.312);
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    margin-top: -10px; 
+    margin-bottom: -10px; 
 }
 
 #main-nav ul ul {
@@ -33,18 +54,33 @@ body {
 
 #main-nav ul li {
     list-style-type: none;
-    display: inline-block;
     text-align: center;
-    padding: 10px;
+    height: 100%; 
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
 }
 
 #main-nav ul li a {
-    text-align: center;
     color: #272727;
     text-decoration: none;
-    display: inline-block
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    height: 100%; 
+    padding: 0 10px; 
+    box-sizing: border-box; /* Ensure padding is included in width */
 }
 
+#main-nav ul li img {
+    height: 24px; /* Maximum height for the image */
+    width: auto; /* Maintain aspect ratio */
+    vertical-align: middle; /* Align the image vertically */
+}
+
+#main-nav .profile-icon {
+    margin-left: auto; /* Pushes the profile icon to the far right */
+}
 /* Main area */
 
 #main-area {

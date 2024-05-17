@@ -89,4 +89,45 @@ body {
     height: 100%;
     font-family: Arial, Helvetica, sans-serif;
 
+} 
+
+#bar { 
+    background-color: rgba(103, 96, 230, 0.487);
+    display: flex; 
+    padding: 0 20px;
+    align-items: center;
+    height: 50px; 
+    margin-top: auto;
+    position: absolute; 
+    bottom: 0; 
+    left: 10px;
+    right: 10px; 
+    justify-content: center;
+} 
+
+#bar p { 
+    color:rgba(46, 41, 136, 0.487) ;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+#left-section {
+    width: 45%;
+    float: left;
+}
+
+#right-section {
+    width: 45%;
+    float: right;
+}
+
+#playlist {
+    padding: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: first baseline; /* Aligns children to the right */
+    width: 75%;
+    float: right;
+    margin-right: 275px;
+
 }

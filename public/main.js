@@ -1,3 +1,6 @@
+//var host = window.location.origin;
+
+
 function getHashParams() {
     var hashParams = {};
     var e, r = /([^&;=]+)=?([^&;]*)/g,

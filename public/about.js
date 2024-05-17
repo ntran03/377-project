@@ -44,6 +44,35 @@ document.addEventListener('DOMContentLoaded', function() {
     loadSubmissions(); // Initial load of submissions
 });
 
+async function greet() {
+    let access_token = localStorage.getItem("access_token");
+
+    if (!access_token) {
+        console.error('Access token not found. Please authenticate.');
+        return;
+    }
+
+    try {
+        const response = await fetch('https://api.spotify.com/v1/me', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + access_token
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch user profile');
+        }
+
+        const data = await response.json();
+        console.log('User Profile:', data);
+        document.getElementById("greeting").innerHTML = "Hello, " + data.display_name + "!"
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
 function getHashParams() {
     var hashParams = {};
     var e, r = /([^&;=]+)=?([^&;]*)/g,
@@ -79,6 +108,13 @@ function addTokenToLinks() {
     });
   }
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    addTokenToLinks();
+    greet();
+});
+
 // Ensure the function runs on page load
-document.addEventListener('DOMContentLoaded', addTokenToLinks)
-window.onload = fetchToken();
+//document.addEventListener('DOMContentLoaded', addTokenToLinks)
+window.onload = () => {
+    fetchToken();
+}

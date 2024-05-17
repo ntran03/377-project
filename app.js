@@ -15,10 +15,9 @@ var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-
 var client_id = '36dd62132c624fbeaaa2f99068f5ff60'; // your clientId
 var client_secret = 'abfd85ba165f45d28ffa6d5cb937a5b8'; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var redirect_uri = 'https://377-project.vercel.app/callback'; // Your redirect uri
 
 
 
@@ -32,6 +31,11 @@ const generateRandomString = (length) => {
 var stateKey = 'spotify_auth_state';
 
 var app = express();
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
 
 app.use(express.static(__dirname + '/public'))
    .use(cors())
@@ -220,5 +224,7 @@ app.post('/top5', (req, res) => {
 });
 
 
-console.log('Listening on 8888');
-app.listen(8888);
+//console.log('Listening on 8888');
+//app.listen(8888);
+const port = process.env.PORT;
+app.listen(port, () => console.log(`Server running on port ${port}`));

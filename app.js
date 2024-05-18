@@ -13,11 +13,11 @@ var crypto = require('crypto');
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
-
+const bodyParser = require('body-parser');
 
 var client_id = '36dd62132c624fbeaaa2f99068f5ff60'; // your clientId
 var client_secret = 'abfd85ba165f45d28ffa6d5cb937a5b8'; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var redirect_uri = 'https://377-project.vercel.app/callback'; // Your redirect uri
 
 
 
@@ -31,6 +31,11 @@ const generateRandomString = (length) => {
 var stateKey = 'spotify_auth_state';
 
 var app = express();
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
 
 app.use(express.static(__dirname + '/public'))
    .use(cors())
@@ -102,12 +107,11 @@ app.get('/callback', function(req, res) {
         request.get(options, function(error, response, body) {
           console.log(body);
         });
-
         // we can also pass the token to the browser to make requests from there
         res.redirect('main.html#' +
           querystring.stringify({
             access_token: access_token,
-            refresh_token: refresh_token
+            refresh_token: refresh_token,
           }));
       } else {
         res.redirect('/#' +
@@ -147,6 +151,80 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+// Form and Submission Handling  
+let submissions = [];
 
-console.log('Listening on 8888');
-app.listen(8888);
+app.use(bodyParser.json());
+app.use(express.static('public'));
+
+app.post('/submit', (req, res) => {
+    console.log('Form Data:', req.body);
+    submissions.push(req.body);
+    res.json({ message: 'Submission received!' });
+});
+
+app.get('/submissions', (req, res) => {
+    res.json(submissions);
+});
+
+app.get('/view-submissions', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'main.html'));
+});
+
+// Profile Page
+let userProfile = {}; // Define userProfile in the global scope- not working
+
+let top5Lists = {  // Define top5Lists in the global scope
+  artists: [],
+  songs: [],
+  albums: []
+};
+
+async function getAccessToken() {
+  const fetch = await import('node-fetch'); // Use dynamic import
+  const response = await fetch.default('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
+    },
+    body: 'grant_type=client_credentials'
+  });
+  const data = await response.json();
+  return data.access_token;
+}
+
+
+app.get('/search', async (req, res) => {
+  const query = req.query.q;
+  const type = req.query.type;
+  const artist = req.query.artist || '';
+  const token = await getAccessToken();
+  const headers = { 'Authorization': 'Bearer ' + token };
+
+  let searchUrl = `https://api.spotify.com/v1/search?q=${query}&type=${type}&limit=5`;
+  if (type === 'track' && artist) {
+    searchUrl = `https://api.spotify.com/v1/search?q=track:${query}+artist:${artist}&type=track&limit=5`;
+  }
+
+  const searchResults = await fetch(searchUrl, { headers });
+  const data = await searchResults.json();
+
+  res.json(data);
+});
+
+app.get('/top5', (req, res) => {
+  res.json(top5Lists);
+});
+
+app.post('/top5', (req, res) => {
+  const { artists, songs, albums } = req.body;
+  top5Lists = { artists, songs, albums };
+  res.status(200).json({ message: 'Top 5 lists updated successfully' });
+});
+
+
+//console.log('Listening on 8888');
+//app.listen(8888);
+const port = process.env.PORT;
+app.listen(port, () => console.log(`Server running on port ${port}`));

@@ -1,11 +1,57 @@
 <html>
     <head>
-        <title></title>
-        <script src="test.js"></script>
+        <title>Profile</title>
+        <link rel="stylesheet" href="general.css">
+        <script src="profile.js"></script>
+        <link rel="stylesheet" href="profile.css">
+        
     </head>
     <body>
-        <p id="tester">blah</p>
-        <p>yes</p>
-    
+        <h3>SPOTIFY SNAPSHOT- PROFILE</h3>
+        <nav id="main-nav">
+            <ul>
+                <li><a href="main.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="generate.html">Generate</a></li>
+                <li><a href="help.html">Help</a></li>
+                <li class= "profile-icon"><a href="profile.html"><img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png" alt="Profile Icon"></a></li>
+            </ul>
+        </nav>
+       
+        <div class="profile" id="profileInfo"></div>
+
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search for artists, songs, albums...">
+            <select id="searchType">
+              <option value="artist">Artist</option>
+              <option value="track">Song</option>
+              <option value="album">Album</option>
+            </select>
+            <button id="search" onclick="performSearch()">Search</button>
+          </div>
+          
+          <div class="results-container">
+            <h3>Search Results</h3>
+            <ul id="searchResults"></ul>
+          </div>
+          <div class="results">
+            <div class="notepad">
+              <h3>Top 5 Artists</h3>
+              <ul id="artistsList"></ul>
+            </div>
+            <div class="notepad">
+              <h3>Top 5 Songs</h3>
+              <ul id="songsList"></ul>
+            </div>
+            <div class="notepad">
+              <h3>Top 5 Albums</h3>
+              <ul id="albumsList"></ul>
+            </div>
+          </div>
+          <script src="profile.js"></script>
+        <footer id="bar">
+            <p>Spotify Snapshot - INST377</p>
+        </footer>
     </body>
 </html>

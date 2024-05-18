@@ -3,62 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Snapshot</title>
-    <link rel="stylesheet" href="generate.css">
+    <title>Generate</title>
+    <link rel="stylesheet" href="general.css">
+    <script src="main.js"></script>
 </head>
 <body>
-    <header>
-        <div class="header-links">
-            <a href="main.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="#">Generate</a>
-            <a href="help.html">Help</a>
-        </div>
-        <h1>Spotify Snapshot</h1>
-    </header>
-    <main>
+    <h3>SPOTIFY SNAPSHOT- GENERATE</h3>
+    <nav id="main-nav">
+        <ul>
+            <li><a href="main.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="generate.html">Generate</a></li>
+            <li><a href="help.html">Help</a></li>
+            <li class= "profile-icon"><a href="profile.html"><img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png" alt="Profile Icon"></a></li>
+        </ul>
+    </nav>
+    <div class="content-area">
         <section id="welcome-section">
             <p>Hi! Welcome to your custom playlist generator! Check boxes for factors you want to use, and have fun!</p>
         </section>
         <section id="left-section">
-            <h2>Select Criteria</h2>
+            <h2>Select Criteria:</h2>
             <div class="criteria">
                 <label for="genres">Genre(s):</label>
-                <select id="genres" multiple>
-                </select>
+                <input type="text" id="genres" placeholder="Enter genres separated by commas">
             </div>
+            <br>
             <div class="criteria">
                 <label for="seed-artists">Seed Artists:</label>
                 <input type="text" id="seed-artists">
             </div>
+            <br>
             <div class="criteria">
                 <label for="seed-songs">Seed Songs:</label>
                 <input type="text" id="seed-songs">
             </div>
+            <br>
             <div class="criteria">
                 <label for="use-top-songs">Use Top Songs:</label>
                 <input type="checkbox" id="use-top-songs">
             </div>
+            <br>
             <div class="criteria">
                 <label for="energy">Energy:</label>
                 <input type="range" id="energy" min="0" max="100">
             </div>
+            <br>
             <div class="criteria">
                 <label for="duration">Duration (minutes):</label>
                 <input type="range" id="duration" min="1" max="200">
             </div>
+            <br>
             <div class="criteria">
                 <label for="num-tracks">Number of Tracks:</label>
                 <input type="number" id="num-tracks" min="1" max="100">
             </div>
+            <br>
             <button id="generate-btn">Generate</button>
         </section>
         <section id="right-section">
-            <h2>Generated Playlist</h2>
+            <h2>Generated Playlist:</h2>
             <ul id="playlist">
             </ul>
         </section>
-    </main>
-    <script src="script.js"></script>
+    </div>
+    <footer id="bar">
+        <p>Spotify Snapshot - INST377</p>
+    </footer>
+    <script src="testing_generate.js"></script>
 </body>
 </html>

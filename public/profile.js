@@ -155,6 +155,7 @@ function fetchToken() {
 function addTokenToLinks() {
   const links = document.querySelectorAll('a');
   var profileIcons = document.querySelectorAll('.profile-icon a');
+  alert("hi")
   links.forEach(link => {
       const url = new URL(link.href);
       var access = localStorage.getItem("access_token")

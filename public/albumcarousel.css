@@ -1,0 +1,13 @@
+#carousel {
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+#albumImage {
+    border-radius: 50%;
+    width: 100%;
+    max-width: 400px;
+}

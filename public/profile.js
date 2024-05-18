@@ -167,3 +167,4 @@ function addTokenToLinks() {
 
 // Ensure the function runs on page load
 document.addEventListener('DOMContentLoaded', addTokenToLinks)
+

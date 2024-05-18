@@ -33,6 +33,7 @@ var stateKey = 'spotify_auth_state';
 
 var app = express();
 
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
 app.use(express.static(__dirname + '/public'))
    .use(cors())
    .use(cookieParser());
+
 
 app.use(express.static(__dirname + '/public', { index: 'login.html' }));
 
@@ -224,8 +226,10 @@ app.post('/top5', (req, res) => {
   res.status(200).json({ message: 'Top 5 lists updated successfully' });
 });
 
+/*
+console.log('Listening on 8888');
+app.listen(8888);
+*/
 
-//console.log('Listening on 8888');
-//app.listen(8888);
 const port = process.env.PORT;
 app.listen(port, () => console.log(`Server running on port ${port}`));

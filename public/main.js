@@ -151,10 +151,11 @@ async function createPlaylist(tracks) {
 
       const playlistData = await response.json();
       const playlistId = playlistData.id;
+      console.log('Created Playlist ID:', playlistId);
 
       // Add tracks to the new playlist
       const trackUris = tracks.map(track => track.uri);
-      await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+      response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
           method: 'POST',
           headers: {
               'Authorization': 'Bearer ' + accessToken,
@@ -164,6 +165,10 @@ async function createPlaylist(tracks) {
               uris: trackUris
           })
       });
+
+      if (!response.ok) {
+          throw new Error('Failed to add tracks to playlist');
+      }
 
       // Embed the playlist
       const playlistContainer = document.getElementById('playlist-container');
@@ -222,7 +227,7 @@ function addTokenToLinks() {
 
 // Ensure the function runs on page load
 document.addEventListener('DOMContentLoaded', addTokenToLinks)
-document.addEventListener('DOMContentLoaded', fetchTopData)
+//document.addEventListener('DOMContentLoaded', fetchTopData)
 
 
 function setCode() {

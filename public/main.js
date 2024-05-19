@@ -1,5 +1,66 @@
 //var host = window.location.origin;
 
+async function fetchTopSongs() {
+  const accessToken = localStorage.getItem("access_token");
+
+  if (!accessToken) {
+      alert('Access token not found. Please authenticate.');
+      return;
+  }
+
+  try {
+      const response = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=10', {
+          method: 'GET',
+          headers: {
+              'Authorization': 'Bearer ' + accessToken
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to fetch top tracks');
+      }
+
+      const data = await response.json();
+      displayTopSongs(data.items);
+  } catch (error) {
+      console.error('Error:', error);
+  }
+}
+
+function displayTopSongs(songs) {
+  alert("gettting songs")
+  const topSongsDiv = document.getElementById('top-songs');
+  topSongsDiv.innerHTML = ''; // Clear any existing content
+
+  songs.forEach(song => {
+      const songDiv = document.createElement('div');
+      songDiv.className = 'song';
+
+      const songImage = document.createElement('img');
+      songImage.src = song.album.images[0].url;
+      songImage.alt = song.name;
+
+      const songInfo = document.createElement('div');
+      songInfo.className = 'song-info';
+
+      const songName = document.createElement('p');
+      songName.textContent = `Name: ${song.name}`;
+
+      const songArtists = document.createElement('p');
+      songArtists.textContent = `Artist(s): ${song.artists.map(artist => artist.name).join(', ')}`;
+
+      const songPlays = document.createElement('p');
+      songPlays.textContent = `Plays: ${song.play_count || 'N/A'}`; // Note: Spotify API doesn't provide play count directly
+
+      songInfo.appendChild(songName);
+      songInfo.appendChild(songArtists);
+      songInfo.appendChild(songPlays);
+      songDiv.appendChild(songImage);
+      songDiv.appendChild(songInfo);
+
+      topSongsDiv.appendChild(songDiv);
+  });
+}
 
 function getHashParams() {
     var hashParams = {};
@@ -48,6 +109,7 @@ function addTokenToLinks() {
 
 // Ensure the function runs on page load
 document.addEventListener('DOMContentLoaded', addTokenToLinks)
+document.addEventListener('DOMContentLoaded', fetchTopSongs)
 
 
 function setCode() {

@@ -4,7 +4,7 @@
     "description": "Spotify Authorization Code",
     "author": "Spotify",
     "scripts": {
-        "start": "nodemon app.js"
+       "start": "nodemon app.js"
     },
     "dependencies": {
         "@supabase/supabase-js": "^2.43.2",

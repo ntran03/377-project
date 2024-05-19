@@ -129,21 +129,28 @@ window.onload = () => {
     fetchToken();
 }
 
-var host = window.location.origin; 
-async function createInfo() { 
-    await fetch(`${host}/about`, { 
-        method : 'POST',
-        body : JSON.stringify({
-            'name': `${document.getElementById('name').value}`,
-            'email': `${document.getElementById('email').value}`,
-            'comment': `${document.getElementById('comment').value}`,
-        })
-    })
-    .then((res)=> res.json())
-    .then((res)=>  async function() {
-        createInfo();
+//new supabase code
+var host = window.location.origin;
 
-    })
+async function createInfo() {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const comment = document.getElementById('comment').value;
 
+    await fetch(`${host}/api/supabase/ticket`, {  
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, comment })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
-window.onload = createInfo()
+
+window.onload = createInfo;  

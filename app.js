@@ -36,6 +36,7 @@ var app = express();
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  //res.sendFile('public/login.html',{ root: __dirname});
 });
 
 
@@ -228,6 +229,8 @@ app.post('/top5', (req, res) => {
 
 
 // supabase connection
+app.use(express.json());  
+
 const supabaseClient = require('@supabase/supabase-js');
 const supabaseUrl = 'https://gjcxmiorsyfgsjtkjypo.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqY3htaW9yc3lmZ3NqdGtqeXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYxMzYwMzYsImV4cCI6MjAzMTcxMjAzNn0.sHHVXiluHeICLNpwISWfBtwAVJxY-Wb-iX0TQjchCv4'
@@ -238,43 +241,35 @@ app.get('/api/supabase', (req, res) => {
 })
 
 app.get('/api/supabase/about', async (req, res) => {
-    console.log('attempting to GET all customers')
+  console.log('Attempting to GET all entries from About');
 
-    const { data, error } = await supabase
-        .from('About')
-        .select()
+  const { data, error } = await supabase
+      .from('About')
+      .select();
 
-
-    if (error) {
-        console.log('Error')
-        res.send(error)
-
-    } else {
-        res.send(data)
-    }
-
-})
+  if (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).send(error);
+  } else {
+      res.status(200).json(data);
+  }
+});
 
 app.post('/api/supabase/ticket', async (req, res) => {
-    console.log('adding about')
-    var name = req.body.name;
-    var email = req.body.email;
-    var comment = req.body.comment;
+  console.log('Adding new entry to About');
+  const { name, email, comment } = req.body;
 
-    const { data, error } = await supabase
-        .from('About')
-        .insert({ 'name': name, 'email': email, 'comment': comment})
-        .select()
+  const { data, error } = await supabase
+      .from('About')
+      .insert([{ name, email, comment }]);
 
-    if (error) {
-        console.log('Error')
-        res.send(error)
-    
-    } else {
-        res.send(data)
-    }
-})
-
+  if (error) {
+      console.error('Error adding entry:', error);
+      res.status(500).send(error);
+  } else {
+      res.status(201).json(data);
+  }
+});
 
 
 //console.log('Listening on 8888');

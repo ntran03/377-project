@@ -9,53 +9,53 @@ async function fetcher() {
 }
 
 async function fetchTopData() {
-    const accessToken = localStorage.getItem("access_token");
-    const topCount = document.getElementById('top-count').value;
-    const timeRange = document.getElementById('time-range').value;
-  
-    if (!accessToken) {
+  const accessToken = localStorage.getItem("access_token");
+  const topCount = document.getElementById('top-count').value;
+  const timeRange = document.getElementById('time-range').value;
+
+  if (!accessToken) {
       alert('Access token not found. Please authenticate.');
       return;
-    }
-  
-    try {
+  }
+
+  try {
       // Fetch top tracks
       let response = await fetch(`https://api.spotify.com/v1/me/top/tracks?limit=${topCount}&time_range=${timeRange}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + accessToken
-        }
+          method: 'GET',
+          headers: {
+              'Authorization': 'Bearer ' + accessToken
+          }
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to fetch top tracks');
+          throw new Error('Failed to fetch top tracks');
       }
-  
+
       const topTracksData = await response.json();
       const trackIds = topTracksData.items.map(track => track.id);
       const tracksWithPlayCounts = await fetchTrackPlayCounts(trackIds, accessToken);
       
-      displayTopTracks(tracksWithPlayCounts); // Pass tracks with play counts to display function
+      displayTopTracks(tracksWithPlayCounts);
       await createPlaylist(topTracksData.items);
-  
+
       // Fetch top artists
       response = await fetch(`https://api.spotify.com/v1/me/top/artists?limit=${topCount}&time_range=${timeRange}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + accessToken
-        }
+          method: 'GET',
+          headers: {
+              'Authorization': 'Bearer ' + accessToken
+          }
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to fetch top artists');
+          throw new Error('Failed to fetch top artists');
       }
-  
+
       const topArtistsData = await response.json();
       displayTopArtists(topArtistsData.items);
-    } catch (error) {
+  } catch (error) {
       console.error('Error:', error);
-    }
   }
+}
 
 async function fetchTrackPlayCounts(trackIds, accessToken) {
   try {
@@ -106,42 +106,43 @@ async function fetchTrackPlayCounts(trackIds, accessToken) {
 }
 
 function displayTopTracks(tracks) {
-    const topTracksDiv = document.getElementById('top-songs');
-    topTracksDiv.innerHTML = '<h4>Top Tracks</h4>'; // Add heading
-  
-    tracks.forEach(track => {
+  const topTracksDiv = document.getElementById('top-songs');
+  topTracksDiv.innerHTML = '<h4>Top Tracks</h4>'; // Add heading
+
+  tracks.forEach(track => {
       const trackDiv = document.createElement('div');
       trackDiv.className = 'item';
-  
+
       const trackImage = document.createElement('img');
       trackImage.src = track.album.images[0].url;
       trackImage.alt = track.name;
-  
+
       const trackInfo = document.createElement('div');
       trackInfo.className = 'item-info';
-  
+
       const trackName = document.createElement('p');
       trackName.textContent = `${track.name}`;
-  
+
       const trackArtists = document.createElement('p');
       trackArtists.textContent = `Artist: ${track.artists.map(artist => artist.name).join(', ')}`;
-  
+
       const trackPopularity = document.createElement('p');
       trackPopularity.textContent = `Popularity: ${track.popularity}`;
-  
+
       const trackPlayCount = document.createElement('p');
-      trackPlayCount.textContent = `Plays: ${track.playCount}`; // Display play count
-  
+      alert(trackPlayCount)
+      trackPlayCount.textContent = `Plays: ${track.playCount}`;
+
       trackInfo.appendChild(trackName);
       trackInfo.appendChild(trackArtists);
       trackInfo.appendChild(trackPopularity);
-      trackInfo.appendChild(trackPlayCount); // Append play count to track info
+      trackInfo.appendChild(trackPlayCount);
       trackDiv.appendChild(trackImage);
       trackDiv.appendChild(trackInfo);
-  
+
       topTracksDiv.appendChild(trackDiv);
-    });
-  }
+  });
+}
 
 function displayTopArtists(artists) {
   const topArtistsDiv = document.getElementById('top-artists');

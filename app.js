@@ -229,24 +229,15 @@ app.post('/top5', (req, res) => {
 
 // supabase connection
 const supabaseClient = require('@supabase/supabase-js');
-const bodyParser = require('body-parser');
-const express = require('express');
-const { dirname } = require('path');
-
-const app = express()
-
-app.use(bodyParser.json())
-app.use(express.static(__dirname + '/public'))
-
 const supabaseUrl = 'https://gjcxmiorsyfgsjtkjypo.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqY3htaW9yc3lmZ3NqdGtqeXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYxMzYwMzYsImV4cCI6MjAzMTcxMjAzNn0.sHHVXiluHeICLNpwISWfBtwAVJxY-Wb-iX0TQjchCv4'
-const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+const supabase = supabaseClient.createClient(supabaseUrl, supabaseKey)
 
-app.get('/', (req, res) => {
+app.get('/api/supabase', (req, res) => {
   res.sendFile('public/about.html', { root: __dirname})
 })
 
-app.get('/about', async (req, res) => {
+app.get('/api/supabase/about', async (req, res) => {
     console.log('attempting to GET all customers')
 
     const { data, error } = await supabase
@@ -264,7 +255,7 @@ app.get('/about', async (req, res) => {
 
 })
 
-app.post('/about', async (req, res) => {
+app.post('/api/supabase/ticket', async (req, res) => {
     console.log('adding about')
     var name = req.body.name;
     var email = req.body.email;
@@ -285,10 +276,9 @@ app.post('/about', async (req, res) => {
 })
 
 
-/*
-console.log('Listening on 8888');
-app.listen(8888);
-*/
+
+//console.log('Listening on 8888');
+//app.listen(8888);
 
 const port = process.env.PORT;
 app.listen(port, () => console.log(`Server running on port ${port}`));

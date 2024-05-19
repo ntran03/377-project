@@ -1,9 +1,11 @@
 //var host = window.location.origin;
 
 
-document.getElementById('fetch-data').addEventListener('click', function() {
-  fetchTopData();
-});
+async function fetcher() {
+  document.getElementById('fetch-data').addEventListener('click', function() {
+    fetchTopData();
+  });
+}
 
 async function fetchTopData() {
   const accessToken = localStorage.getItem("access_token");
@@ -227,6 +229,8 @@ function addTokenToLinks() {
 
 // Ensure the function runs on page load
 document.addEventListener('DOMContentLoaded', addTokenToLinks)
+document.addEventListener('DOMContentLoaded', fetcher)
+
 //document.addEventListener('DOMContentLoaded', fetchTopData)
 
 

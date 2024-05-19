@@ -3,6 +3,7 @@
         <title>Home</title>
         <link rel="stylesheet" href="general.css">
         <link rel="stylesheet" href="albumcarousel.css">
+        <link rel="stylesheet" href="main.css">
         <script src="main.js"></script>
         <script src="websitecarousel.js"></script>
     </head>
@@ -25,9 +26,30 @@
                 <div id="carousel">
                     <img id="albumImage" src="" alt="Album Image">
                 </div>
-                <h4>Tickets:</h4>
-                <div id="submissions"></div>
+                <h3>Top Spotify Songs and Artists</h3>
+                <div class="controls">
+                    <label for="top-count">Show Top:</label>
+                    <select id="top-count">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                    <label for="time-range">Time Range:</label>
+                    <select id="time-range">
+                        <option value="short_term">1 month</option>
+                        <option value="medium_term">6 months</option>
+                        <option value="long_term">1 year</option>
+                    </select>
+                    <button id="fetch-data">Fetch Top Songs and Artists</button>
+                </div>
+                <div class="container">
+                    <div id="top-songs" class="scrollable"></div>
+                    <div id="top-artists" class="scrollable"></div>
+                </div>
+                <div id="playlist-container"></div>
+                
             </div>
+            <h4>Tickets:</h4>
+            <div id="submissions"></div>
         <footer id="bar">
             <p>Spotify Snapshot - INST377</p>
         </footer>

@@ -1,12 +1,12 @@
 //var host = window.location.origin;
 
 
-document.addEventListener('DOMContentLoaded', function() {
+async function fetcher() {
   document.getElementById('fetch-data').addEventListener('click', function() {
       fetchTopData();
   });
   fetchToken(); // Ensure the token is fetched on page load
-});
+}
 
 async function fetchTopData() {
   const accessToken = localStorage.getItem("access_token");

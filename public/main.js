@@ -130,6 +130,7 @@ function displayTopTracks(tracks) {
       trackPopularity.textContent = `Popularity: ${track.popularity}`;
 
       const trackPlayCount = document.createElement('p');
+      alert(trackPlayCount)
       trackPlayCount.textContent = `Plays: ${track.playCount}`;
 
       trackInfo.appendChild(trackName);

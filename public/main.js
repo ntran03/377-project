@@ -1,8 +1,9 @@
 //var host = window.location.origin;
 
-
 async function fetchTopData() {
   const accessToken = localStorage.getItem("access_token");
+  const topCount = document.getElementById('top-count').value;
+  const timeRange = document.getElementById('time-range').value;
 
   if (!accessToken) {
       alert('Access token not found. Please authenticate.');
@@ -11,7 +12,7 @@ async function fetchTopData() {
 
   try {
       // Fetch top tracks
-      let response = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=5', {
+      let response = await fetch(`https://api.spotify.com/v1/me/top/tracks?limit=${topCount}&time_range=${timeRange}`, {
           method: 'GET',
           headers: {
               'Authorization': 'Bearer ' + accessToken
@@ -19,7 +20,7 @@ async function fetchTopData() {
       });
 
       if (!response.ok) {
-          throw new Error('failed to fetch top tracks');
+          throw new Error('Failed to fetch top tracks');
       }
 
       const topTracksData = await response.json();
@@ -27,7 +28,7 @@ async function fetchTopData() {
       await createPlaylist(topTracksData.items);
 
       // Fetch top artists
-      response = await fetch('https://api.spotify.com/v1/me/top/artists?limit=5', {
+      response = await fetch(`https://api.spotify.com/v1/me/top/artists?limit=${topCount}&time_range=${timeRange}`, {
           method: 'GET',
           headers: {
               'Authorization': 'Bearer ' + accessToken
@@ -47,7 +48,7 @@ async function fetchTopData() {
 
 function displayTopTracks(tracks) {
   const topTracksDiv = document.getElementById('top-songs');
-  topTracksDiv.innerHTML = '<h4>Top 5 Tracks</h4>'; // Add heading
+  topTracksDiv.innerHTML = '<h4>Top Tracks</h4>'; // Add heading
 
   tracks.forEach(track => {
       const trackDiv = document.createElement('div');
@@ -77,7 +78,7 @@ function displayTopTracks(tracks) {
 
 function displayTopArtists(artists) {
   const topArtistsDiv = document.getElementById('top-artists');
-  topArtistsDiv.innerHTML = '<h4>Top 5 Artists</h4>'; // Add heading
+  topArtistsDiv.innerHTML = '<h4>Top Artists</h4>'; // Add heading
 
   artists.forEach(artist => {
       const artistDiv = document.createElement('div');
@@ -166,6 +167,7 @@ async function createPlaylist(tracks) {
       console.error('Error:', error);
   }
 }
+
 
 
 function getHashParams() {

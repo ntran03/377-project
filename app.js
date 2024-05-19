@@ -34,10 +34,9 @@ var stateKey = 'spotify_auth_state';
 var app = express();
 
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
-  //res.sendFile('public/login.html',{ root: __dirname});
-});
+//app.get('/', (req, res) => {
+//  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+//});
 
 
 app.use(express.static(__dirname + '/public'))

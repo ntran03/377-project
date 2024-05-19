@@ -1,11 +1,12 @@
 //var host = window.location.origin;
 
 
-async function fetcher() {
+document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('fetch-data').addEventListener('click', function() {
-    fetchTopData();
+      fetchTopData();
   });
-}
+  fetchToken(); // Ensure the token is fetched on page load
+});
 
 async function fetchTopData() {
   const accessToken = localStorage.getItem("access_token");
@@ -31,7 +32,10 @@ async function fetchTopData() {
       }
 
       const topTracksData = await response.json();
-      displayTopTracks(topTracksData.items);
+      const trackIds = topTracksData.items.map(track => track.id);
+      const tracksWithPlayCounts = await fetchTrackPlayCounts(trackIds, accessToken);
+      
+      displayTopTracks(tracksWithPlayCounts);
       await createPlaylist(topTracksData.items);
 
       // Fetch top artists
@@ -53,6 +57,54 @@ async function fetchTopData() {
   }
 }
 
+async function fetchTrackPlayCounts(trackIds, accessToken) {
+  try {
+      const toDate = new Date().toISOString(); // Current date
+      const fromDate = new Date();
+      fromDate.setFullYear(fromDate.getFullYear() - 1); // One year ago
+      const fromDateString = fromDate.toISOString();
+
+      const response = await fetch(`https://api.spotify.com/v1/me/player/recently-played?limit=50&after=${fromDateString}&before=${toDate}`, {
+          method: 'GET',
+          headers: {
+              'Authorization': 'Bearer ' + accessToken
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to fetch recently played tracks');
+      }
+
+      const recentlyPlayedData = await response.json();
+      const playCounts = {};
+
+      recentlyPlayedData.items.forEach(item => {
+          const trackId = item.track.id;
+          if (trackIds.includes(trackId)) {
+              if (playCounts[trackId]) {
+                  playCounts[trackId]++;
+              } else {
+                  playCounts[trackId] = 1;
+              }
+          }
+      });
+
+      // Map play counts to tracks
+      const tracksWithPlayCounts = trackIds.map(trackId => {
+          const track = topTracksData.items.find(item => item.id === trackId);
+          return {
+              ...track,
+              playCount: playCounts[trackId] || 0
+          };
+      });
+
+      return tracksWithPlayCounts;
+  } catch (error) {
+      console.error('Error fetching track play counts:', error);
+      return [];
+  }
+}
+
 function displayTopTracks(tracks) {
   const topTracksDiv = document.getElementById('top-songs');
   topTracksDiv.innerHTML = '<h4>Top Tracks</h4>'; // Add heading
@@ -69,13 +121,21 @@ function displayTopTracks(tracks) {
       trackInfo.className = 'item-info';
 
       const trackName = document.createElement('p');
-      trackName.textContent = `Name: ${track.name}`;
+      trackName.textContent = `${track.name}`;
 
       const trackArtists = document.createElement('p');
-      trackArtists.textContent = `Artist(s): ${track.artists.map(artist => artist.name).join(', ')}`;
+      trackArtists.textContent = `Artist: ${track.artists.map(artist => artist.name).join(', ')}`;
+
+      const trackPopularity = document.createElement('p');
+      trackPopularity.textContent = `Popularity: ${track.popularity}`;
+
+      const trackPlayCount = document.createElement('p');
+      trackPlayCount.textContent = `Plays: ${track.playCount}`;
 
       trackInfo.appendChild(trackName);
       trackInfo.appendChild(trackArtists);
+      trackInfo.appendChild(trackPopularity);
+      trackInfo.appendChild(trackPlayCount);
       trackDiv.appendChild(trackImage);
       trackDiv.appendChild(trackInfo);
 
@@ -99,7 +159,7 @@ function displayTopArtists(artists) {
       artistInfo.className = 'item-info';
 
       const artistName = document.createElement('p');
-      artistName.textContent = `Name: ${artist.name}`;
+      artistName.textContent = `${artist.name}`;
 
       artistInfo.appendChild(artistName);
       artistDiv.appendChild(artistImage);

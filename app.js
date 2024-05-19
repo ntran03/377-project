@@ -17,8 +17,8 @@ const bodyParser = require('body-parser');
 
 var client_id = '36dd62132c624fbeaaa2f99068f5ff60'; // your clientId
 var client_secret = 'abfd85ba165f45d28ffa6d5cb937a5b8'; // Your secret
-//var redirect_uri = 'https://377-project.vercel.app/callback'; // Your redirect uri
-var redirect_uri = 'localhost:8888/callback'; 
+var redirect_uri = 'https://377-project.vercel.app/callback'; // Your redirect uri
+//var redirect_uri = 'localhost:8888/callback'; 
 
 
 
@@ -277,8 +277,8 @@ app.post('/api/supabase/ticket', async (req, res) => {
 
 
 
-console.log('Listening on 8888');
-app.listen(8888);
+//console.log('Listening on 8888');
+//app.listen(8888);
 
-//const port = process.env.PORT;
-//app.listen(port, () => console.log(`Server running on port ${port}`));
+const port = process.env.PORT;
+app.listen(port, () => console.log(`Server running on port ${port}`));

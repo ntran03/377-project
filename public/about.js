@@ -1,7 +1,7 @@
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('submissionForm').addEventListener('submit', function(event) {
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('submissionForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the form from submitting the traditional way
 
         var formData = {
@@ -17,28 +17,28 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify(formData)
         })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('responseMessage').innerText = 'Submited Successfully!';
-            console.log('Success:', data);
-            loadSubmissions(); // Reload submissions after successful submission
-        })
-        .catch((error) => {
-            document.getElementById('responseMessage').innerText = 'An error occurred!';
-            console.error('Error:', error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('responseMessage').innerText = 'Submited Successfully!';
+                console.log('Success:', data);
+                loadSubmissions(); // Reload submissions after successful submission
+            })
+            .catch((error) => {
+                document.getElementById('responseMessage').innerText = 'An error occurred!';
+                console.error('Error:', error);
+            });
     });
 
     function loadSubmissions() {
         fetch('/submissions')
-        .then(response => response.json())
-        .then(data => {
-            const displayDiv = document.getElementById('submissions');
-            displayDiv.innerHTML = ''; // Clear previous submissions
-            data.forEach(submission => {
-                displayDiv.innerHTML += `<p>Name: ${submission.name}<br>Email: ${submission.email}<br>Comment: ${submission.comment}</p>`;
+            .then(response => response.json())
+            .then(data => {
+                const displayDiv = document.getElementById('submissions');
+                displayDiv.innerHTML = ''; // Clear previous submissions
+                data.forEach(submission => {
+                    displayDiv.innerHTML += `<p>Name: ${submission.name}<br>Email: ${submission.email}<br>Comment: ${submission.comment}</p>`;
+                });
             });
-        });
     }
 
     loadSubmissions(); // Initial load of submissions
@@ -77,22 +77,22 @@ function getHashParams() {
     var hashParams = {};
     var e, r = /([^&;=]+)=?([^&;]*)/g,
         q = window.location.hash.substring(1);
-    while ( e = r.exec(q)) {
-       hashParams[e[1]] = decodeURIComponent(e[2]);
+    while (e = r.exec(q)) {
+        hashParams[e[1]] = decodeURIComponent(e[2]);
     }
     return hashParams;
-  }
-  
-  
+}
+
+
 function fetchToken() {
     var params = getHashParams()
     if (params) {
-      console.log(params)
-      localStorage.setItem("access_token", params.access_token)
-      localStorage.setItem("refresh_token", params.refresh_token)
+        console.log(params)
+        localStorage.setItem("access_token", params.access_token)
+        localStorage.setItem("refresh_token", params.refresh_token)
     }
     console.log(localStorage.getItem("access_token"));
-  }
+}
 
 // Function to add the token to all links on the page
 function addTokenToLinks() {
@@ -108,15 +108,15 @@ function addTokenToLinks() {
         link.href = url.toString();
     });
     profileIcons.forEach(link => {
-      const url = new URL(link.href);
-      var access = localStorage.getItem("access_token")
-      var refresh = localStorage.getItem("refresh_token")
-      let hashString = `access_token=${access}&refresh_token=${refresh}`;
-      // Set the hash portion of the URL
-      url.hash = hashString;
-      link.href = url.toString();
+        const url = new URL(link.href);
+        var access = localStorage.getItem("access_token")
+        var refresh = localStorage.getItem("refresh_token")
+        let hashString = `access_token=${access}&refresh_token=${refresh}`;
+        // Set the hash portion of the URL
+        url.hash = hashString;
+        link.href = url.toString();
     });
-  }
+}
 
 document.addEventListener('DOMContentLoaded', (event) => {
     addTokenToLinks();
@@ -128,3 +128,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
 window.onload = () => {
     fetchToken();
 }
+
+var host = window.location.origin; 
+async function createInfo() { 
+    await fetch(`${host}/about`, { 
+        method : 'POST',
+        body : JSON.stringify({
+            'name': `${document.getElementById('name').value}`,
+            'email': `${document.getElementById('email').value}`,
+            'comment': `${document.getElementById('comment').value}`,
+        })
+    })
+    .then((res)=> res.json())
+    .then((res)=>  async function() {
+        createInfo();
+
+    })
+
+}
+window.onload = createInfo()

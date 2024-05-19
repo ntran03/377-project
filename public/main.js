@@ -22,6 +22,7 @@ async function fetchTopSongs() {
 
       const data = await response.json();
       displayTopSongs(data.items);
+      await createPlaylist(data.items);
   } catch (error) {
       console.error('Error:', error);
   }
@@ -60,6 +61,72 @@ function displayTopSongs(songs) {
 
       topSongsDiv.appendChild(songDiv);
   });
+}
+
+async function createPlaylist(songs) {
+  const accessToken = localStorage.getItem("access_token");
+
+  if (!accessToken) {
+      alert('Access token not found. Please authenticate.');
+      return;
+  }
+
+  try {
+      // Get the user's ID
+      let response = await fetch('https://api.spotify.com/v1/me', {
+          method: 'GET',
+          headers: {
+              'Authorization': 'Bearer ' + accessToken
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+      }
+
+      const userData = await response.json();
+      const userId = userData.id;
+
+      // Create a new playlist
+      response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+          method: 'POST',
+          headers: {
+              'Authorization': 'Bearer ' + accessToken,
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              name: 'Top Spotify Songs',
+              description: 'Top songs based on your Spotify listening history',
+              public: false
+          })
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to create playlist');
+      }
+
+      const playlistData = await response.json();
+      const playlistId = playlistData.id;
+
+      // Add tracks to the new playlist
+      const trackUris = songs.map(song => song.uri);
+      await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+          method: 'POST',
+          headers: {
+              'Authorization': 'Bearer ' + accessToken,
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              uris: trackUris
+          })
+      });
+
+      // Embed the playlist
+      const playlistContainer = document.getElementById('playlist-container');
+      playlistContainer.innerHTML = `<iframe src="https://open.spotify.com/embed/playlist/${playlistId}" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+  } catch (error) {
+      console.error('Error:', error);
+  }
 }
 
 function getHashParams() {

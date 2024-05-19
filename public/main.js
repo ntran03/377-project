@@ -1,6 +1,7 @@
 //var host = window.location.origin;
 
-async function fetchTopSongs() {
+
+async function fetchTopData() {
   const accessToken = localStorage.getItem("access_token");
 
   if (!accessToken) {
@@ -9,7 +10,8 @@ async function fetchTopSongs() {
   }
 
   try {
-      const response = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=10', {
+      // Fetch top tracks
+      let response = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=5', {
           method: 'GET',
           headers: {
               'Authorization': 'Bearer ' + accessToken
@@ -17,53 +19,89 @@ async function fetchTopSongs() {
       });
 
       if (!response.ok) {
-          throw new Error('Failed to fetch top tracks');
+          throw new Error('failed to fetch top tracks');
       }
 
-      const data = await response.json();
-      displayTopSongs(data.items);
-      await createPlaylist(data.items);
+      const topTracksData = await response.json();
+      displayTopTracks(topTracksData.items);
+      await createPlaylist(topTracksData.items);
+
+      // Fetch top artists
+      response = await fetch('https://api.spotify.com/v1/me/top/artists?limit=5', {
+          method: 'GET',
+          headers: {
+              'Authorization': 'Bearer ' + accessToken
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to fetch top artists');
+      }
+
+      const topArtistsData = await response.json();
+      displayTopArtists(topArtistsData.items);
   } catch (error) {
       console.error('Error:', error);
   }
 }
 
-function displayTopSongs(songs) {
-  alert("gettting songs")
-  const topSongsDiv = document.getElementById('top-songs');
-  topSongsDiv.innerHTML = ''; // Clear any existing content
+function displayTopTracks(tracks) {
+  const topTracksDiv = document.getElementById('top-songs');
+  topTracksDiv.innerHTML = '<h4>Top 5 Tracks</h4>'; // Add heading
 
-  songs.forEach(song => {
-      const songDiv = document.createElement('div');
-      songDiv.className = 'song';
+  tracks.forEach(track => {
+      const trackDiv = document.createElement('div');
+      trackDiv.className = 'item';
 
-      const songImage = document.createElement('img');
-      songImage.src = song.album.images[0].url;
-      songImage.alt = song.name;
+      const trackImage = document.createElement('img');
+      trackImage.src = track.album.images[0].url;
+      trackImage.alt = track.name;
 
-      const songInfo = document.createElement('div');
-      songInfo.className = 'song-info';
+      const trackInfo = document.createElement('div');
+      trackInfo.className = 'item-info';
 
-      const songName = document.createElement('p');
-      songName.textContent = `Name: ${song.name}`;
+      const trackName = document.createElement('p');
+      trackName.textContent = `Name: ${track.name}`;
 
-      const songArtists = document.createElement('p');
-      songArtists.textContent = `Artist(s): ${song.artists.map(artist => artist.name).join(', ')}`;
+      const trackArtists = document.createElement('p');
+      trackArtists.textContent = `Artist(s): ${track.artists.map(artist => artist.name).join(', ')}`;
 
-      const songPlays = document.createElement('p');
-      songPlays.textContent = `Plays: ${song.play_count || 'N/A'}`; // Note: Spotify API doesn't provide play count directly
+      trackInfo.appendChild(trackName);
+      trackInfo.appendChild(trackArtists);
+      trackDiv.appendChild(trackImage);
+      trackDiv.appendChild(trackInfo);
 
-      songInfo.appendChild(songName);
-      songInfo.appendChild(songArtists);
-      songInfo.appendChild(songPlays);
-      songDiv.appendChild(songImage);
-      songDiv.appendChild(songInfo);
-
-      topSongsDiv.appendChild(songDiv);
+      topTracksDiv.appendChild(trackDiv);
   });
 }
 
-async function createPlaylist(songs) {
+function displayTopArtists(artists) {
+  const topArtistsDiv = document.getElementById('top-artists');
+  topArtistsDiv.innerHTML = '<h4>Top 5 Artists</h4>'; // Add heading
+
+  artists.forEach(artist => {
+      const artistDiv = document.createElement('div');
+      artistDiv.className = 'item';
+
+      const artistImage = document.createElement('img');
+      artistImage.src = artist.images[0].url;
+      artistImage.alt = artist.name;
+
+      const artistInfo = document.createElement('div');
+      artistInfo.className = 'item-info';
+
+      const artistName = document.createElement('p');
+      artistName.textContent = `Name: ${artist.name}`;
+
+      artistInfo.appendChild(artistName);
+      artistDiv.appendChild(artistImage);
+      artistDiv.appendChild(artistInfo);
+
+      topArtistsDiv.appendChild(artistDiv);
+  });
+}
+
+async function createPlaylist(tracks) {
   const accessToken = localStorage.getItem("access_token");
 
   if (!accessToken) {
@@ -109,7 +147,7 @@ async function createPlaylist(songs) {
       const playlistId = playlistData.id;
 
       // Add tracks to the new playlist
-      const trackUris = songs.map(song => song.uri);
+      const trackUris = tracks.map(track => track.uri);
       await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
           method: 'POST',
           headers: {
@@ -128,6 +166,7 @@ async function createPlaylist(songs) {
       console.error('Error:', error);
   }
 }
+
 
 function getHashParams() {
     var hashParams = {};
@@ -176,7 +215,7 @@ function addTokenToLinks() {
 
 // Ensure the function runs on page load
 document.addEventListener('DOMContentLoaded', addTokenToLinks)
-document.addEventListener('DOMContentLoaded', fetchTopSongs)
+document.addEventListener('DOMContentLoaded', fetchTopData)
 
 
 function setCode() {

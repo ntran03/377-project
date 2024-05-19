@@ -1,5 +1,10 @@
 //var host = window.location.origin;
 
+
+document.getElementById('fetch-data').addEventListener('click', function() {
+  fetchTopData();
+});
+
 async function fetchTopData() {
   const accessToken = localStorage.getItem("access_token");
   const topCount = document.getElementById('top-count').value;

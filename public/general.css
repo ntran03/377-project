@@ -105,6 +105,7 @@ body{
     align-items: center;
     height: 50px;
     margin-top: auto;
+    position: absolute;
     bottom: 0;
     left: 10px;
     right: 10px;

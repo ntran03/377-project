@@ -32,6 +32,11 @@ main {
     width: 45%;
 }
 
+#left-section, #right-section {
+    flex: 1;
+}
+
+
 #playlist {
     list-style: none;
     padding: 0;

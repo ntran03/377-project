@@ -218,7 +218,6 @@ function addTokenToLinks() {
         var access = localStorage.getItem("access_token")
         var refresh = localStorage.getItem("refresh_token")
         let hashString = `access_token=${access}&refresh_token=${refresh}`;
-        // Set the hash portion of the URL
         url.hash = hashString;
         link.href = url.toString();
     });
@@ -227,7 +226,6 @@ function addTokenToLinks() {
       var access = localStorage.getItem("access_token")
       var refresh = localStorage.getItem("refresh_token")
       let hashString = `access_token=${access}&refresh_token=${refresh}`;
-      // Set the hash portion of the URL
       url.hash = hashString;
       link.href = url.toString();
     });

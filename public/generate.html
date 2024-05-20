@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generate</title>
     <link rel="stylesheet" href="general.css">
-    <script src="main.js"></script>
+    <script defer src="main.js"></script>
 </head>
 <body>
     <h3>SPOTIFY SNAPSHOT- GENERATE</h3>
@@ -15,7 +12,7 @@
             <li><a href="about.html">About</a></li>
             <li><a href="generate.html">Generate</a></li>
             <li><a href="help.html">Help</a></li>
-            <li class= "profile-icon"><a href="profile.html"><img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png" alt="Profile Icon"></a></li>
+            <li class="profile-icon"><a href="profile.html"><img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png" alt="Profile Icon"></a></li>
         </ul>
     </nav>
     <div class="content-area">
@@ -30,18 +27,18 @@
             </div>
             <br>
             <div class="criteria">
-                <label for="seed-artists">Seed Artists:</label>
-                <input type="text" id="seed-artists">
+                <label for="limit">Number of Tracks:</label>
+                <input type="number" id="limit" min="1" max="100">
             </div>
             <br>
             <div class="criteria">
-                <label for="seed-songs">Seed Songs:</label>
-                <input type="text" id="seed-songs">
+                <label for="acousticness">Acousticness:</label>
+                <input type="range" id="acousticness" min="0" max="100">
             </div>
             <br>
             <div class="criteria">
-                <label for="use-top-songs">Use Top Songs:</label>
-                <input type="checkbox" id="use-top-songs">
+                <label for="danceability">Danceability:</label>
+                <input type="range" id="danceability" min="0" max="100">
             </div>
             <br>
             <div class="criteria">
@@ -50,13 +47,13 @@
             </div>
             <br>
             <div class="criteria">
-                <label for="duration">Duration (minutes):</label>
-                <input type="range" id="duration" min="1" max="200">
+                <label for="popularity">Popularity:</label>
+                <input type="range" id="popularity" min="0" max="100">
             </div>
             <br>
             <div class="criteria">
-                <label for="num-tracks">Number of Tracks:</label>
-                <input type="number" id="num-tracks" min="1" max="100">
+                <label for="use-top-songs">Use Top Songs:</label>
+                <input type="checkbox" id="use-top-songs">
             </div>
             <br>
             <button id="generate-btn">Generate</button>
@@ -70,6 +67,5 @@
     <footer id="bar">
         <p>Spotify Snapshot - INST377</p>
     </footer>
-    <script src="testing_generate.js"></script>
 </body>
 </html>

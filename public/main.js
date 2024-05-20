@@ -8,100 +8,49 @@ async function fetcher() {
     fetchToken(); // Ensure the token is fetched on page load
   }
   
-async function fetchTopData() {
-  const accessToken = localStorage.getItem("access_token");
-  const topCount = document.getElementById('top-count').value;
-  const timeRange = document.getElementById('time-range').value;
+  async function fetchTopData() {
+    const accessToken = localStorage.getItem("access_token");
+    const topCount = document.getElementById('top-count').value;
+    const timeRange = document.getElementById('time-range').value;
 
-  if (!accessToken) {
-      alert('Access token not found. Please authenticate.');
-      return;
-  }
+    if (!accessToken) {
+        alert('Access token not found. Please authenticate.');
+        return;
+    }
 
-  try {
-      // Fetch top tracks
-      let response = await fetch(`https://api.spotify.com/v1/me/top/tracks?limit=${topCount}&time_range=${timeRange}`, {
-          method: 'GET',
-          headers: {
-              'Authorization': 'Bearer ' + accessToken
-          }
-      });
-
-      if (!response.ok) {
-          throw new Error('Failed to fetch top tracks');
-      }
-
-      const topTracksData = await response.json();
-      const trackIds = topTracksData.items.map(track => track.id);
-      const tracksWithPlayCounts = await fetchTrackPlayCounts(trackIds, accessToken);
-      
-      displayTopTracks(tracksWithPlayCounts);
-      await createPlaylist(topTracksData.items);
-
-      // Fetch top artists
-      response = await fetch(`https://api.spotify.com/v1/me/top/artists?limit=${topCount}&time_range=${timeRange}`, {
-          method: 'GET',
-          headers: {
-              'Authorization': 'Bearer ' + accessToken
-          }
-      });
-
-      if (!response.ok) {
-          throw new Error('Failed to fetch top artists');
-      }
-
-      const topArtistsData = await response.json();
-      displayTopArtists(topArtistsData.items);
-  } catch (error) {
-      console.error('Error:', error);
-  }
-}
-
-async function fetchTrackPlayCounts(trackIds, accessToken) {
     try {
-        const toDate = new Date().toISOString(); // Current date
-        const fromDate = new Date();
-        fromDate.setFullYear(fromDate.getFullYear() - 1); // One year ago
-        const fromDateString = fromDate.toISOString();
-  
-        const response = await fetch(`https://api.spotify.com/v1/me/player/recently-played?limit=50&after=${fromDateString}&before=${toDate}`, {
+        // Fetch top tracks
+        let response = await fetch(`https://api.spotify.com/v1/me/top/tracks?limit=${topCount}&time_range=${timeRange}`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + accessToken
             }
         });
-  
+
         if (!response.ok) {
-            throw new Error('Failed to fetch recently played tracks: ' + response.status);
+            throw new Error('Failed to fetch top tracks');
         }
-  
-        const recentlyPlayedData = await response.json();
-        const playCounts = {};
-  
-        recentlyPlayedData.items.forEach(item => {
-            const trackId = item.track.id;
-            if (trackIds.includes(trackId)) {
-                if (playCounts[trackId]) {
-                    playCounts[trackId]++;
-                } else {
-                    playCounts[trackId] = 1;
-                }
+
+        const topTracksData = await response.json();
+        displayTopTracks(topTracksData.items);
+        await createPlaylist(topTracksData.items);
+
+        // Fetch top artists
+        response = await fetch(`https://api.spotify.com/v1/me/top/artists?limit=${topCount}&time_range=${timeRange}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
             }
         });
-  
-        // Map play counts to tracks
-        const tracksWithPlayCounts = trackIds.map(trackId => {
-            const track = recentlyPlayedData.items.find(item => item.track.id === trackId);
-            return {
-                ...track,
-                playCount: playCounts[trackId] || 0
-            };
-        });
-  
-        return tracksWithPlayCounts;
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch top artists');
+        }
+
+        const topArtistsData = await response.json();
+        displayTopArtists(topArtistsData.items);
     } catch (error) {
-        console.error('Error fetching track play counts:', error);
-        return [];
+        console.error('Error:', error);
     }
 }
 
@@ -130,14 +79,9 @@ function displayTopTracks(tracks) {
       const trackPopularity = document.createElement('p');
       trackPopularity.textContent = `Popularity: ${track.popularity}`;
 
-      const trackPlayCount = document.createElement('p');
-      alert(trackPlayCount)
-      trackPlayCount.textContent = `Plays: ${track.playCount}`;
-
       trackInfo.appendChild(trackName);
       trackInfo.appendChild(trackArtists);
       trackInfo.appendChild(trackPopularity);
-      trackInfo.appendChild(trackPlayCount);
       trackDiv.appendChild(trackImage);
       trackDiv.appendChild(trackInfo);
 

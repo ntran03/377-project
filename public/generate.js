@@ -6,7 +6,7 @@ async function fetchTopTracks(token) {
             }
         });
         if (!response.ok) {
-            throw new Error('Failed to fetch top tracks');
+            throw new Error(`Failed to fetch top tracks: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
         return data.items.map(track => track.id);
@@ -20,6 +20,7 @@ async function fetchRecommendations(token, seedTracks, criteria) {
     const { genres, limit, acousticness, danceability, energy, popularity } = criteria;
     const seedTracksParam = seedTracks.join(',');
     const url = `https://api.spotify.com/v1/recommendations?limit=${limit}&market=US&seed_genres=${genres}&seed_tracks=${seedTracksParam}&target_acousticness=${acousticness / 100}&target_danceability=${danceability / 100}&target_energy=${energy / 100}&target_popularity=${popularity}`;
+
     try {
         const response = await fetch(url, {
             headers: {
@@ -27,7 +28,7 @@ async function fetchRecommendations(token, seedTracks, criteria) {
             }
         });
         if (!response.ok) {
-            throw new Error('Failed to fetch recommendations');
+            throw new Error(`Failed to fetch recommendations: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
         return data.tracks;
@@ -56,13 +57,13 @@ async function buttoner() {
 
         const topTracks = await fetchTopTracks(token);
         if (topTracks.length === 0) {
-            console.error('No top tracks found');
+            console.error('No top tracks found or failed to fetch top tracks');
             return;
         }
 
         const recommendations = await fetchRecommendations(token, topTracks, criteria);
         if (!recommendations || recommendations.length === 0) {
-            console.error('No recommendations found');
+            console.error('No recommendations found or failed to fetch recommendations');
             return;
         }
 

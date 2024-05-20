@@ -21,6 +21,11 @@ async function fetchRecommendations(token, seedTracks, criteria) {
     const seedTracksParam = seedTracks.join(',');
     const url = `https://api.spotify.com/v1/recommendations?limit=${limit}&market=US&seed_genres=${genres}&seed_tracks=${seedTracksParam}&target_acousticness=${acousticness / 100}&target_danceability=${danceability / 100}&target_energy=${energy / 100}&target_popularity=${popularity}`;
 
+    console.log('Request URL:', url);
+    console.log('Request Headers:', {
+        'Authorization': `Bearer ${token}`
+    });
+
     try {
         const response = await fetch(url, {
             headers: {
@@ -46,8 +51,11 @@ async function buttoner() {
         const danceability = document.getElementById('danceability').value;
         const energy = document.getElementById('energy').value;
         const popularity = document.getElementById('popularity').value;
+        const useTopSongs = document.getElementById('use-top-songs').checked;
 
         const criteria = { genres, limit, acousticness, danceability, energy, popularity };
+
+        console.log('Criteria:', criteria);
 
         const token = localStorage.getItem("access_token");
         if (!token) {
@@ -55,13 +63,17 @@ async function buttoner() {
             return;
         }
 
-        const topTracks = await fetchTopTracks(token);
-        if (topTracks.length === 0) {
-            console.error('No top tracks found or failed to fetch top tracks');
-            return;
+        let seedTracks = [];
+        if (useTopSongs) {
+            seedTracks = await fetchTopTracks(token);
+            if (seedTracks.length === 0) {
+                console.error('No top tracks found or failed to fetch top tracks');
+                return;
+            }
+            console.log('Top Tracks:', seedTracks);
         }
 
-        const recommendations = await fetchRecommendations(token, topTracks, criteria);
+        const recommendations = await fetchRecommendations(token, seedTracks, criteria);
         if (!recommendations || recommendations.length === 0) {
             console.error('No recommendations found or failed to fetch recommendations');
             return;

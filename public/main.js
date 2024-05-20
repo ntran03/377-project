@@ -72,7 +72,7 @@ async function fetchTrackPlayCounts(trackIds, accessToken) {
         });
   
         if (!response.ok) {
-            throw new Error('Failed to fetch recently played tracks');
+            throw new Error('Failed to fetch recently played tracks: ' + response.status);
         }
   
         const recentlyPlayedData = await response.json();
@@ -91,7 +91,7 @@ async function fetchTrackPlayCounts(trackIds, accessToken) {
   
         // Map play counts to tracks
         const tracksWithPlayCounts = trackIds.map(trackId => {
-            const track = topTracksData.items.find(item => item.id === trackId);
+            const track = recentlyPlayedData.items.find(item => item.track.id === trackId);
             return {
                 ...track,
                 playCount: playCounts[trackId] || 0
@@ -103,7 +103,8 @@ async function fetchTrackPlayCounts(trackIds, accessToken) {
         console.error('Error fetching track play counts:', error);
         return [];
     }
-  }
+}
+
   
 function displayTopTracks(tracks) {
   const topTracksDiv = document.getElementById('top-songs');

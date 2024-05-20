@@ -150,10 +150,27 @@ async function createInfo() {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
+        fetchAndDisplayData();
     })
     .catch(error => {
         console.error('Error:', error);
     });
+}
+
+//console log all contents of db 
+async function fetchAndDisplayData() {
+    try {
+        const response = await fetch(`${host}/api/supabase/about`, {  
+            method: 'GET'
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        console.log('Database contents:', data);
+    } catch (error) {
+        console.error('Failed to fetch data:', error);
+    }
 }
 
 //window.onload = createInfo;  

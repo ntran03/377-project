@@ -3,6 +3,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('submissionForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the form from submitting the traditional way
+        createInfo();
 
         var formData = {
             name: document.getElementById('name').value,
@@ -42,6 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     loadSubmissions(); // Initial load of submissions
+    addTokenToLinks();
+    greet();
 });
 
 async function greet() {
@@ -118,10 +121,10 @@ function addTokenToLinks() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', (event) => {
+/*document.addEventListener('DOMContentLoaded', (event) => {
     addTokenToLinks();
     greet();
-});
+});*/
 
 // Ensure the function runs on page load
 //document.addEventListener('DOMContentLoaded', addTokenToLinks)
@@ -153,4 +156,4 @@ async function createInfo() {
     });
 }
 
-window.onload = createInfo;  
+//window.onload = createInfo;  

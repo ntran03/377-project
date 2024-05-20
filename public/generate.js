@@ -1,5 +1,5 @@
 
-async function fetchTopTracks() {
+async function fetchTopTracks(token) {
     const response = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=5', {
         headers: {
             'Authorization': `Bearer ${token}`

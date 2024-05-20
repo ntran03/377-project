@@ -1,6 +1,5 @@
 
 async function fetchTopTracks() {
-    const token = localStorage.getItem("access_token");
     const response = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=5', {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -14,7 +13,6 @@ async function fetchTopTracks() {
 async function fetchRecommendations(token, seedTracks, criteria) {
     const { genres, limit, acousticness, danceability, energy, popularity } = criteria;
     const seedTracksParam = seedTracks.join(',');
-
     const response = await fetch(`https://api.spotify.com/v1/recommendations?limit=${limit}&market=US&seed_genres=${genres}&seed_tracks=${seedTracksParam}&target_acousticness=${acousticness / 100}&target_danceability=${danceability / 100}&target_energy=${energy / 100}&target_popularity=${popularity}`, {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -37,8 +35,10 @@ async function buttoner() {
 
         const criteria = { genres, limit, acousticness, danceability, energy, popularity };
 
-        const topTracks = await fetchTopTracks(accessToken);
-        const recommendations = await fetchRecommendations(accessToken, topTracks, criteria);
+
+        const token = localStorage.getItem("access_token");
+        const topTracks = await fetchTopTracks(token);
+        const recommendations = await fetchRecommendations(token, topTracks, criteria);
 
         const playlistElement = document.getElementById('playlist');
         playlistElement.innerHTML = ''; // Clear previous playlist

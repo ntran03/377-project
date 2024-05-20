@@ -121,10 +121,6 @@ function addTokenToLinks() {
     });
 }
 
-/*document.addEventListener('DOMContentLoaded', (event) => {
-    addTokenToLinks();
-    greet();
-});*/
 
 // Ensure the function runs on page load
 //document.addEventListener('DOMContentLoaded', addTokenToLinks)
@@ -155,6 +151,3 @@ async function createInfo() {
         console.error('Error:', error);
     });
 }
-
-
-//window.onload = createInfo;  

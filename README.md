@@ -1,4 +1,8 @@
 # 377-project
+
+### To access vercel page:
+[https://377-project.vercel.app/)
+
 ### Installation
 
 Clone the repository: 'git clone [https://github.com/ntran03/377-project.git](https://github.com/ntran03/377-project.git)'
